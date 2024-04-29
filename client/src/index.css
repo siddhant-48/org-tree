@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body {
+  overflow-y: hidden;
+}
+
+
+.container w-full {
+  background-color: rgb(216, 222, 227);
+  height: 100vh;
+  /* width: 100%; */
+}
+
+/* index.css */
+
+.tree {
+  display: flex;
+  justify-content: center; /* Align the tree in the center horizontally */
+}
+
+.tree-node {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: 10px; /* Add margin to spread out the nodes */
+}
+
+.node-content {
+  padding: 10px;
+}
+
+.children {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align child nodes to the start */
+  margin-left: 20px;
+  border-left: 1px solid #ccc;
+  padding-left: 10px;
+}
+
+.test{
+  padding-top: 35px;
+}
+
+.input-error {
+  border: 1px solid red;
+}
+
+.error-message {
+  color: red;
+  margin: 2px;
+}
