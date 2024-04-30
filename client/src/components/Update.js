@@ -10,7 +10,7 @@ function Update() {
     location: "",
     department: "",
   });
-  console.log("ID:",id);
+  console.log("ID:", id);
   useEffect(() => {
     // log
     const getEmployees = () => {
@@ -40,7 +40,7 @@ function Update() {
           console.error("Error fetching data:", error);
         });
     };
-    
+
     getEmployees();
   }, [id]);
 
@@ -84,7 +84,7 @@ function Update() {
       })
       .then((responseData) => {
         console.log("Employee details updated successfully:", responseData);
-        // You can add any additional logic here, such as showing a success message or navigating to another page
+        navigate(-1);
       })
       .catch((error) => {
         console.error("Error updating employee details:", error);

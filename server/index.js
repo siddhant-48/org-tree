@@ -453,7 +453,7 @@ app.get("/singleID", async (req, res) => {
 //hierarchy
 // async function getEmployeeWithHierarchy(employeeName, processedEmployees = new Set()) {
 //   console.log(`Fetching employee with name: ${employeeName}`);
-  
+
 //   // Check if this employee has already been processed
 //   if (processedEmployees.has(employeeName)) {
 //     console.log(`Employee ${employeeName} has already been processed`);
@@ -518,7 +518,10 @@ app.get("/singleID", async (req, res) => {
 // });
 
 //test2
-async function getEmployeeWithHierarchy(employeeName, processedEmployees = new Set()) {
+async function getEmployeeWithHierarchy(
+  employeeName,
+  processedEmployees = new Set()
+) {
   console.log(`Fetching employee with name: ${employeeName}`);
 
   // Check if this employee has already been processed
@@ -533,7 +536,6 @@ async function getEmployeeWithHierarchy(employeeName, processedEmployees = new S
     return null;
   }
 
-  // Add the employee to the set of processed employees
   processedEmployees.add(employeeName);
 
   const employeeWithHierarchy = {
@@ -548,9 +550,14 @@ async function getEmployeeWithHierarchy(employeeName, processedEmployees = new S
   console.log(`Processing reportings for employee ${employee.name}`);
   for (const reportingName of employee.reportings) {
     console.log(`Fetching reporting employee with name: ${reportingName}`);
-    const reportingEmployeeWithHierarchy = await getEmployeeWithHierarchy(reportingName, processedEmployees);
+    const reportingEmployeeWithHierarchy = await getEmployeeWithHierarchy(
+      reportingName,
+      processedEmployees
+    );
     if (reportingEmployeeWithHierarchy) {
-      console.log(`Found reporting employee: ${reportingEmployeeWithHierarchy.name}`);
+      console.log(
+        `Found reporting employee: ${reportingEmployeeWithHierarchy.name}`
+      );
       employeeWithHierarchy.reportings.push(reportingEmployeeWithHierarchy);
     }
   }
@@ -558,28 +565,45 @@ async function getEmployeeWithHierarchy(employeeName, processedEmployees = new S
   return employeeWithHierarchy;
 }
 
-// GET employee by name and their reporting hierarchy
-app.get('/employee2', async (req, res) => {
+// employee and reportings
+app.get("/employee2", async (req, res) => {
   try {
-    const { name } = req.body;
-
-    // Find the employee by name
-    const employee = await Employee.findOne({ name });
-
+    const { name } = req.query;
+    const lowerCaseName = name.toLowerCase();
+    // find by name
+    const employee = await Employee.findOne({
+      name: { $regex: new RegExp(`^${lowerCaseName}$`, "i") },
+    });
     if (!employee) {
-      return res.status(404).json({ message: 'Employee not found' });
+      return res.status(404).json({ message: "Employee not found" });
     }
-
     console.log(`Found employee ${employee.name}, ID: ${employee.id}`);
-
-    // Get the employee details with reporting hierarchy recursively
+    // employee hierarchy details
     const employeeWithHierarchy = await getEmployeeWithHierarchy(employee.name);
-
-    console.log('Response:', employeeWithHierarchy);
-
+    console.log("Response:", employeeWithHierarchy);
     res.json(employeeWithHierarchy);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Server Error' });
+    res.status(500).json({ message: "Server Error" });
   }
 });
+
+// app.get("/employee2", async (req, res) => {
+//   try {
+//     const { name } = req.body;
+
+//     // find by name
+//     const employee = await Employee.findOne({ name });
+//     if (!employee) {
+//       return res.status(404).json({ message: "Employee not found" });
+//     }
+//     console.log(`Found employee ${employee.name}, ID: ${employee.id}`);
+//     // employee hierarchy details
+//     const employeeWithHierarchy = await getEmployeeWithHierarchy(employee.name);
+//     console.log("Response:", employeeWithHierarchy);
+//     res.json(employeeWithHierarchy);
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ message: "Server Error" });
+//   }
+// });

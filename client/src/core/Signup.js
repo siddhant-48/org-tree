@@ -51,7 +51,7 @@ function Signup() {
         setTimeout(() => {
           setSuccess(false);
           navigate("/signin");
-        }, 1000);
+        }, 2000);
         setSuccess(true);
       } catch (error) {
         console.log("Error:", error);
@@ -63,6 +63,17 @@ function Signup() {
     <>
       <section className="bg-gray-50 dark:bg-gray-900">
         <div className="test">
+        {/* {success && (
+            <Success
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                zIndex: 999,
+              }}
+            />
+          )} */}
           <div className=" flex flex-col items-center justify-center px-6 py-8 mx-auto  lg:py-0 md:px-4 md:py-6">
             {/* <div className="float-end">{success && <Success />}</div> */}
             <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">

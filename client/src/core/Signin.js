@@ -3,9 +3,11 @@ import "../index.css";
 import { signin } from "../auth";
 import { useState } from "react";
 import Services from "./Services";
+import Success from "../toast/Success";
 
 function Signin() {
   const navigate = useNavigate();
+  // const [signIn, setSignIn] = useState(false)
   const [userData, setUserData] = useState({
     email: "",
     password: "",
@@ -35,7 +37,7 @@ function Signin() {
       }, 1000);
     } catch (error) {
       console.error("Signin error:", error);
-      setMsg({ msgType: "error", message: "Invalid email or password" });
+      setMsg({ msgType: "error", message: "Email or Password Incorrect" });
     }
     console.log(msg);
   };
@@ -96,7 +98,7 @@ function Signin() {
                   >
                     Sign In
                   </button>
-                  {msg.msgType === "error" && <p>{msg.message}</p>}
+                  {msg.msgType === "error" && <p className="red">{msg.message}</p>}
                   <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                     New User?{" "}
                     <Link
@@ -107,6 +109,8 @@ function Signin() {
                     </Link>
                   </p>
                 </form>
+                {/* <Success /> */}
+                {authenticated && <Success />}
               </div>
             </div>
           </div>

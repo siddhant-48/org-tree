@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import TreeNode from "../components/TreeNode";
+import { useNavigate } from "react-router-dom";
 import "../index.css";
 import { Card, CardBody, Typography } from "@material-tailwind/react";
 
@@ -9,7 +10,7 @@ const Services = () => {
   const [isModalOpen1, setIsModalOpen1] = useState(false);
   const [employeeID, setEmployeeID] = useState([]);
   const [selectedEmployeeName, setSelectedEmployeeName] = useState("");
-
+  const navigate = useNavigate();
   const [userData, setUserData] = useState({
     id: "",
     name: "",
@@ -83,12 +84,12 @@ const Services = () => {
     e.preventDefault();
 
     const selectedEmployeeName =
-      document.querySelector("#employeeSelect").value; // Assuming employee name is directly available as the value of the select element
+      document.querySelector("#employeeSelect").value;
     const selectedReportingIds = Array.from(
       document.querySelectorAll("#reportingSelect option:checked")
     ).map((option) => option.value);
 
-    // Make the PUT request with the selected IDs
+    // put request
     fetch("http://localhost:5000/addReportings", {
       method: "PUT",
       headers: {
@@ -102,6 +103,7 @@ const Services = () => {
       .then((response) => response.json())
       .then((data) => {
         console.log("Response from server:", data);
+        navigate(-1);
       })
       .catch((error) => {
         console.error("Error submitting reportings:", error);
@@ -218,6 +220,7 @@ const Services = () => {
         .then((response) => response.text())
         .then((data) => {
           console.log("Response from server:", data);
+          navigate(-1);
         })
         .catch((error) => {
           console.error("Error submitting student data:", error);
@@ -600,24 +603,13 @@ const Services = () => {
           )}
         </div>
       </div>
-      {data.length > 0 && (
+      {data && data.length > 0 ? (
         <div className="mt-8 flex-column justify-center">
-          {/* <h2 className="text-2xl font-bold mb-4">Searched Employees</h2> */}
-          <div className="grid grid-cols-3 gap-4">
-            {/* {data.map((employee) => (
-              <div key={employee.id} className="border p-4 rounded-lg">
-                <h3 className="text-lg font-semibold">{employee.name}</h3>
-                <p className="text-gray-500 mb-2">{employee.role}</p>
-                <p className="text-gray-500">{employee.location}</p>
-                <p className="text-gray-500">
-                  Department: {employee.department}
-                </p>
-              </div>
-            ))} */}
+          <div className="flex justify-center">
             {data.map((employee) => (
               <Card
                 key={employee.id}
-                className="w-60 border border-gray-300 rounded-lg mb-6"
+                className="  border border-gray-300 rounded-lg mb-6"
               >
                 <CardBody>
                   <Typography variant="h5" color="blue-gray" className="mb-2">
@@ -636,6 +628,10 @@ const Services = () => {
               </Card>
             ))}
           </div>
+        </div>
+      ) : (
+        <div className="mt-8 flex justify-center">
+          <p className="text-gray-500">No employee record found.</p>
         </div>
       )}
     </>

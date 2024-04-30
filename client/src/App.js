@@ -10,6 +10,7 @@ import Signin from "./core/Signin";
 import Details from "./core/Details";
 import Update from "./components/Update";
 import Test from "./components/Test";
+import Display from "./toast/Display";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -51,17 +52,26 @@ function App() {
       <Router>
         <Nav />
         <Routes>
-          <Route path="/" element={<Home />} />
-          {/* <Route path="/about" element={<About />} /> */}
-          {/* <Route path="/services" element={<Services />}/> */}
-          {isLoggedIn ? (
+          {/* {isLoggedIn ? (
             <Route path="/services" element={<Services />} />
-          ) : null}
+          ) : null} */}
+          <Route
+            path="/services"
+            element={isLoggedIn ? <Services /> : <div>
+              <Display />
+            </div>}
+          />
+          <Route
+            path="/about"
+            element={isLoggedIn ? <Test /> : <div>
+              <Display />
+            </div>}
+          />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/" element={<Home />} />
           <Route path="/signin" element={<Signin />} />
           <Route path="/details" element={<Details />} />
           <Route path="/details/:id" element={<Update />} />
-          <Route path="/about" element={<Test />} />
         </Routes>
       </Router>
     </>
