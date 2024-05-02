@@ -1,6 +1,50 @@
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 function Nav() {
+  const logout = () => {
+    if (Object.keys(localStorage).length === 0) {
+      alert("No User!");
+    } else {
+      window.localStorage.clear();
+      alert("Logout Success!");
+      window.location.href = "/";
+    }
+  };
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userDisplay, setUserDisplay] = useState({
+    email: "",
+    _id: "",
+    phone: "",
+  });
+
+  useEffect(() => {
+    async function fetchUser() {
+      try {
+        const response = await fetch("http://localhost:5000/userEmail", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ token: window.localStorage.getItem("token") }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch user email");
+        }
+
+        const data = await response.json();
+        setUserDisplay(data.user);
+        setIsLoggedIn(true); //login true
+        console.log(data.user);
+      } catch (err) {
+        console.error("Error fetching user:", err);
+        setIsLoggedIn(false); //login false
+      }
+    }
+    fetchUser();
+  }, []);
   return (
     <>
       <nav className="bg-white border-b border-gray-300 dark:bg-gray-900">
@@ -24,23 +68,52 @@ function Nav() {
             >
               <span className="sr-only">Search</span>
             </button>
-            <div className="relative hidden md:block">
+
+            <div className="flex justify-around relative hidden md:block space-x-4">
               <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none"></div>
-              <Link to="/signup">
-                <button
-                  type="button"
-                  className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                >
-                  Signup
-                </button>
-              </Link>
-              {/* <input
-                type="text"
-                id="search-navbar"
-                className="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Search..."
-              /> */}
+              {isLoggedIn ? (
+                <div>
+                  <Link>
+                    <button
+                      onClick={logout}
+                      type="button"
+                      className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    >
+                      Log Out
+                    </button>
+                  </Link>
+                </div>
+              ) : (
+                <Link to="/signup">
+                  <button
+                    type="button"
+                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  >
+                    Signup
+                  </button>
+                </Link>
+              )}
+              {/* <div>
+                <Link to="/signup">
+                  <button
+                    type="button"
+                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  >
+                    Signup
+                  </button>
+                </Link>
+                <Link>
+                  <button
+                    onClick={logout}
+                    type="button"
+                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  >
+                    Log Out
+                  </button>
+                </Link>
+              </div> */}
             </div>
+
             <button
               data-collapse-toggle="navbar-search"
               type="button"
@@ -121,12 +194,12 @@ function Nav() {
                   Services
                 </Link>
               </li>
-                <Link
-                  to="/details"
-                  className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-                >
-                  Details
-                </Link>
+              <Link
+                to="/details"
+                className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+              >
+                Details
+              </Link>
             </ul>
           </div>
         </div>
